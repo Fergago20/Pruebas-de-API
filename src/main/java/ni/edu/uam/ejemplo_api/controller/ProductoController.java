@@ -10,12 +10,13 @@ import static java.lang.String.format;
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
-    @PostMapping
-    public Map<String,String> AgregarProducto(@RequestBody Producto producto){
-        double descuento = producto.getPrecio() * 0.10; // Aplicar un descuento del 10%
+    @PostMapping("/{descuento}")
+    public Map<String,String> AgregarProducto(@RequestBody Producto producto,
+                                             @PathVariable double descuento){
+        double precioFinal = producto.getPrecio() - (producto.getPrecio() * descuento / 100);
         return Map.of(
                 "nombre", producto.getNombre(),
-                "precio", String.valueOf(producto.getPrecio()),
+                "precio", String.valueOf(precioFinal),
                 "descuento", "El descuento es de " + format("%.2f", descuento)
         );
     }
